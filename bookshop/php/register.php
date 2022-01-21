@@ -31,7 +31,7 @@ function sendMail($email,$otp){
     $mail->Host       = 'mail.slumberjer.com';                          //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                           //Enable SMTP authentication
     $mail->Username   = 'slumbersoft@slumberjer.com';  
-    $mail->Password   = 'T0MizfNmCddW';
+    $mail->Password   = 'g(v!@D([]7UP$K7wty';                                 //g(v!@D([]7UP$K7wty  /  T0MizfNmCddW
     $mail->SMTPSecure = 'tls';         
     $mail->Port       = 587;
     $from = "slumbersoft@slumberjer.com";

@@ -117,7 +117,7 @@ function subString($str)
         </div>
         <?php 
         echo "<div class='w3-container w3-padding w3-block w3-center'><p><b><label id='totalpaymentid'> Total Amount Payable: RM $total_payable</label>
-        </b></p><a href='payment.php' class='w3-button w3-round w3-blue'> Pay Now </a> </div>";
+        </b></p><a href='payment.php?email=$useremail&amount=$total_payable' class='w3-button w3-round w3-blue'> Pay Now </a> </div>";
         ?>
         
     <footer class="w3-row-padding w3-padding-32">

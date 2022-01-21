@@ -226,7 +226,7 @@ function subString($str)
 				alert("Success");
 			}
 			if (res.status == "failed") {
-			    alert("Failed");
+			    alert("Please login/register account");
 			}
 			
 
