@@ -5,10 +5,11 @@ if (isset($_POST["submit"])) {
     $author = addslashes($_POST["author"]);
     $isbn = $_POST["isbn"];
     $price = $_POST["price"];
+    $qty = $_POST["qty"];
     $description = addslashes($_POST["description"]);
     $publisher = addslashes($_POST["publisher"]);
     $langguage = $_POST["langguage"];
-    $sqlinsert = "INSERT INTO `tbl_books`(`book_title`, `book_author`, `book_isbn`, `book_price`, `book_description`, `book_pub`, `book_lang`) VALUES ('$title', '$author', '$isbn', $price, '$description', '$publisher', '$langguage')";
+    $sqlinsert = "INSERT INTO `tbl_books`(`book_title`, `book_author`, `book_isbn`, `book_price`, `book_description`, `book_pub`, `book_lang`,`book_qty`) VALUES ('$title', '$author', '$isbn', $price, '$description', '$publisher', '$langguage','$qty')";
     
     try {
         $conn->exec($sqlinsert);
@@ -48,9 +49,9 @@ function uploadImage($id)
     <!-- Sidebar (hidden by default) -->
     <nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
         <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button">Close Menu</a>
-        <a href="#food" onclick="w3_close()" class="w3-bar-item w3-button">Books</a>
-        <a href="#food" onclick="w3_close()" class="w3-bar-item w3-button">My Carts</a>
-        <a href="#food" onclick="w3_close()" class="w3-bar-item w3-button">Payment History</a>
+        <a href="index.php" onclick="w3_close()" class="w3-bar-item w3-button">Books</a>
+        <a href="mycart.php" onclick="w3_close()" class="w3-bar-item w3-button">Carts</a>
+        <a href="paymenthist.php" onclick="w3_close()" class="w3-bar-item w3-button">Payment</a>
         <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">About</a>
     </nav>
 
@@ -83,6 +84,8 @@ function uploadImage($id)
 
             <label>Price</label>
             <input class="w3-input" name="price" id="idprice" type="number" step="any"required>
+            <label>Quantity</label>
+            <input class="w3-input" name="qty" id="idqty" type="number" step="any"required>
 
             <p>
                 <label>Description</label>

@@ -2,9 +2,13 @@
 include_once ("dbconnect.php");
 session_start();
 $useremail = "Guest";
+$user_name = "Guest";
+$user_phone = "-";
 if (isset($_SESSION['sessionid']))
 {
     $useremail = $_SESSION['user_email'];
+    $user_name = $_SESSION['user_name'];
+    $user_phone = $_SESSION['user_phone'];
 }
 $carttotal = 0;
 if (isset($_GET['submit']))
@@ -63,7 +67,7 @@ if (isset($_GET['submit']))
 }
 else
 {
-    $sqlquery = "SELECT * FROM tbl_books";
+    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0";
 }
 
 $stmtqty = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail'");
@@ -131,8 +135,8 @@ function subString($str)
         <a href="login.php" onclick="w3_close()" class="w3-bar-item w3-button">Login</a>
         <a href="register.php" onclick="w3_close()" class="w3-bar-item w3-button">Register</a>
         <a href="index.php" onclick="w3_close()" class="w3-bar-item w3-button">Books</a>
-        <a href="mycart.php" onclick="w3_close()" class="w3-bar-item w3-button" id ="carttotalida">My Carts (<?php echo $carttotal?>)</a>
-        <a href="paymenthist.php" onclick="w3_close()" class="w3-bar-item w3-button">Payment History</a>
+        <a href="mycart.php" onclick="w3_close()" class="w3-bar-item w3-button">Carts</a>
+        <a href="mypayment.php" onclick="w3_close()" class="w3-bar-item w3-button">Payment</a>
         <a href="logout.php" onclick="w3_close()" class="w3-bar-item w3-button">Logout</a>
     </nav>
 
@@ -145,7 +149,7 @@ function subString($str)
         </div>
     </div>
     <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
-    <div class="w3-container w3-center"><p>Welcome <?php echo $useremail?> </p></div>
+    <div class="w3-container w3-center"><p>Welcome <?php echo $user_name?> </p></div>
     <div class="w3-container w3-card w3-padding w3-row w3-round" style="width:100%">
         <form class="w3-container" action="index.php" method="get">
             <div class="w3-twothird"><input class="w3-input w3-border w3-round w3-center" placeholder = "Enter your search term here" type="text" name="search"></div>
@@ -167,11 +171,12 @@ function subString($str)
                     $book_pub = $books['book_pub'];
                     $book_lang = $books['book_lang'];
                     $book_date = $books['book_date'];
+                    $book_qty = $books['book_qty'];
                     
                     echo "<div class='w3-center w3-padding-small'><div class = 'w3-card w3-round-large'>
                     <div class='w3-padding-small'><a href='book_details.php?bookid=$bookid'><img class='w3-container w3-image' 
                     src=../images/books/$book_isbn.jpg onerror=this.onerror=null;this.src='../images/books/default.jpg'></a></div>
-                    <b>$book_title</b><br>$book_author<br>RM $book_price<br>
+                    <b>$book_title</b><br>$book_author<br>RM $book_price / $book_qty avail<br>
                     <input type='button' class='w3-button w3-blue w3-round' id='button_id' value='Add to Cart' onClick='addCart($bookid);'><br><br>
                     </div></div>";
                     //<a href='index.php?bookid=$bookid&submit=$cart' class='w3-btn w3-blue w3-round'>Add to Cart</a><br><br>
@@ -221,7 +226,7 @@ function subString($str)
 			console.log(res.status);
 			if (res.status == "success") {
 			    console.log(res.data.carttotal);
-				document.getElementById("carttotalida").innerHTML = "Cart (" + res.data.carttotal + ")";
+				//document.getElementById("carttotalida").innerHTML = "Cart (" + res.data.carttotal + ")";
 				document.getElementById("carttotalidb").innerHTML = "Cart (" + res.data.carttotal + ")";
 				alert("Success");
 			}

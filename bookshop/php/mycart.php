@@ -1,14 +1,21 @@
 <?php
 include_once("dbconnect.php");
 session_start();
-$useremail = "Guest";
+
 if (isset($_SESSION['sessionid'])) {
     $useremail = $_SESSION['user_email'];
+     $user_name = $_SESSION['user_name'];
+    $user_phone = $_SESSION['user_phone'];
 }else{
    echo "<script>alert('Please login or register')</script>";
    echo "<script> window.location.replace('login.php')</script>";
 }
-if (isset($_GET['submit'])) {
+$sqlcart = "SELECT * FROM tbl_carts WHERE user_email = '$useremail'";
+$stmt = $conn->prepare($sqlcart);
+$stmt->execute();
+$number_of_rows = $stmt->rowCount();
+if ($number_of_rows>0){
+   if (isset($_GET['submit'])) {
     if ($_GET['submit'] == "add"){
         $bookid = $_GET['bookid'];
         $qty = $_GET['qty'];
@@ -32,7 +39,12 @@ if (isset($_GET['submit'])) {
         }
         
     }
+} 
+}else{
+    echo "<script>alert('No item in your cart')</script>";
+   echo "<script> window.location.replace('index.php')</script>";
 }
+
 
 
 $stmtqty = $conn->prepare("SELECT * FROM tbl_carts INNER JOIN tbl_books ON tbl_carts.book_id = tbl_books.book_id WHERE tbl_carts.user_email = '$useremail'");
@@ -76,8 +88,8 @@ function subString($str)
         <a href="login.php" onclick="w3_close()" class="w3-bar-item w3-button">Login</a>
         <a href="register.php" onclick="w3_close()" class="w3-bar-item w3-button">Register</a>
         <a href="index.php" onclick="w3_close()" class="w3-bar-item w3-button">Books</a>
-        <a href="mycart.php" onclick="w3_close()" class="w3-bar-item w3-button" id = "carttotalida">My Carts (<?php echo $carttotal?>)</a>
-        <a href="paymenthist.pahp" onclick="w3_close()" class="w3-bar-item w3-button">Payment History</a>
+        <a href="mycart.php" onclick="w3_close()" class="w3-bar-item w3-button" id = "carttotalida">Carts</a>
+        <a href="payment_details.php" onclick="w3_close()" class="w3-bar-item w3-button">Payment</a>
         <a href="logout.php" onclick="w3_close()" class="w3-bar-item w3-button">Logout</a>
     </nav>
 
@@ -90,7 +102,7 @@ function subString($str)
         </div>
     </div>
     <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
-        <div class="w3-container w3-center"><p>Cart for <?php echo $useremail?> </p></div><hr>
+        <div class="w3-container w3-center"><p>Cart for <?php echo $user_name?> </p></div><hr>
         <div class="w3-grid-template">
              <?php
              
@@ -170,6 +182,10 @@ function removeCart(bookid, book_price) {
 			var res = JSON.parse(JSON.stringify(response));
 			if (res.status = "success") {
 				console.log(res.data.carttotal);
+				if (res.data.carttotal == null || res.data.carttotal == 0){
+				    alert("Cart empty");
+				    window.location.replace("index.php");
+				}else{
 				var bookid = res.data.bookid;
 				document.getElementById("carttotalida").innerHTML = "Cart (" + res.data.carttotal + ")";
 				document.getElementById("carttotalidb").innerHTML = "Cart (" + res.data.carttotal + ")";
@@ -180,7 +196,9 @@ function removeCart(bookid, book_price) {
 				if (res.data.qty==null){
 				    var element = document.getElementById("bookcard_"+bookid);
 				    element.parentNode.removeChild(element);
+				}    
 				}
+				
 			} else {
 				alert("Failed");
 			}
